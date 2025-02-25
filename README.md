@@ -33,6 +33,120 @@ Reference: R. W. R. Darling, "Retro-preferential Stochastic Mobility Models on R
 
 <br>
 
+## Explication du fonctionnement (FR seulement)
+# Compilation
+Utiliser la commande mvn install package, puis modifier pour avoir Main-Class: fractalRabbitGenerator.MainClassFR, sinon le programme plantera pour chercher main.MainClassFR et enfin relancer avec un mvn clean package, le binaire sera prêt.
+
+# FractalRabbit
+
+FractalRabbit est un simulateur stochastique de mobilité qui génère des ensembles de données synthétiques réalistes de points de cheminement sporadiques.
+
+## Table des matières
+
+- [Installation](#installation)
+- [Utilisation](#utilisation)
+- [Structure des fichiers de sortie](#structure-des-fichiers-de-sortie)
+- [Interprétation des données](#interprétation-des-données)
+- [Relation entre les fichiers](#relation-entre-les-fichiers)
+- [Utilisation des paramètres](#utilisation-des-paramètres)
+- [Exploitation des résultats](#exploitation-des-résultats)
+
+## Installation
+
+1. Clonez ce dépôt :
+   ```
+   git clone https://github.com/votre-nom-utilisateur/fractalrabbit.git
+   ```
+2. Accédez au répertoire du projet :
+   ```
+   cd fractalrabbit
+   ```
+
+## Utilisation
+
+Exécutez FractalRabbit avec la commande suivante :
+
+```
+java -jar target/fractalrabbit-1.0-jar-with-dependencies.jar parameters.csv output.csv
+```
+
+## Structure des fichiers de sortie
+
+### output.csvXY.csv
+
+Ce fichier contient les coordonnées X et Y des points de trajectoire simulés.
+
+- **ID**: Identifiant du voyageur (simulé)
+- **Days**: Temps écoulé (en jours) depuis le début de la simulation
+- **x(km)**: Coordonnée X du point (en kilomètres)
+- **y(km)**: Coordonnée Y du point (en kilomètres)
+
+### output.csvPLACES.csv
+
+Ce fichier contient l'identifiant des lieux visités par chaque voyageur.
+
+- **Traveler ID**: Identifiant du voyageur
+- **Days**: Temps écoulé (en jours)
+- **Place ID**: Identifiant du lieu visité
+
+## Interprétation des données
+
+### output.csvXY.csv
+
+- Chaque ligne représente un point de la trajectoire d'un voyageur à un moment donné.
+- Exemple : la première ligne indique que le voyageur 0, après 80.65 jours, se trouve aux coordonnées (120.41, -24.62).
+- Les coordonnées sont exprimées en kilomètres.
+- La position des points de trajectoire varie avec le temps.
+
+### output.csvPLACES.csv
+
+- Chaque ligne représente une visite à un lieu spécifique.
+- Exemple : la première ligne indique que le voyageur 0, après 80.65 jours, visite le lieu 59.
+- Les lieux sont représentés par des identifiants numériques.
+- La même position peut être visitée à différents jours.
+- La simulation s'effectue sur 365 jours.
+
+## Relation entre les fichiers
+
+Les deux fichiers sont liés par les colonnes ID (dans output.csvXY.csv) et Traveler ID (dans output.csvPLACES.csv), ainsi que par la colonne Days. Ces informations permettent de reconstruire la trajectoire complète de chaque voyageur en associant les coordonnées X et Y aux lieux visités à des moments spécifiques.
+
+## Utilisation des paramètres
+
+Le fichier `parameters.csv` contrôle divers aspects de la simulation :
+
+- **d = 10**: Dimension de l'espace de simulation
+- **h = 0.5**: Fréquence de retour aux lieux déjà visités
+- **n = 100**: Nombre total d'emplacements potentiels
+- **numTravelers = 5**: Nombre de voyageurs simulés
+- **numCoTravelers = 2**: Taille des groupes de voyageurs
+- **days = 365.25**: Durée de la simulation (en jours)
+- **countMean = 2.5**: Nombre moyen de rapports de localisation par jour
+
+## Exploitation des résultats
+
+### Visualisation
+
+- Utilisez Kepler.gl pour visualiser les données de trajectoire.
+- Importez les deux fichiers CSV dans Kepler.gl.
+- Configurez l'affichage des points de trajectoire et des lieux visités.
+- Créez des animations pour visualiser les déplacements au fil du temps.
+
+### Analyse des trajectoires
+
+- Calculez des statistiques : distance parcourue, vitesse moyenne, lieux les plus visités.
+- Identifiez des motifs de déplacement et des regroupements de voyageurs.
+
+### Exploration des paramètres
+
+Modifiez les paramètres dans `parameters.csv` et relancez la simulation pour observer les changements dans les résultats.
+
+### Exemple d'analyse concrète
+
+1. Identifiez les lieux préférés de chaque voyageur.
+2. Calculez la distance totale parcourue par voyageur.
+3. Analysez la saisonnalité des déplacements sur de longues périodes.
+
+
 ## Table of contents
 
 - [Status](#status)
