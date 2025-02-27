@@ -1,51 +1,55 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from tqdm import tqdm
+import time  # Juste pour simuler le calcul du graphique
 
-# Data for the first table (Traveler ID, Days, Place ID)
-data1 = {
-    'Traveler ID': [0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4],
-    'Days': [80.64657756613256, 235.49366412282828, 318.70257158522935, 32.787134144236994, 
-             65.38867228100221, 143.4943506115183, 172.650798031163, 316.5803010141229, 
-             88.4001686918016, 126.85278109910891, 241.59006842198136, 265.6188326916466, 
-             3.4269545635538163, 81.64013075946859, 84.85122366539542, 111.47074929423299, 
-             161.62453442083424, 194.40947831749438],
-    'Place ID': [59, 23, 76, 49, 5, 72, 72, 84, 60, 60, 63, 84, 59, 9, 9, 49, 8, 8]
-}
+print("[INFO] Chargement des fichiers CSV...")
 
-df1 = pd.DataFrame(data1)
+# Charger les fichiers CSV contenant les données
+df1 = pd.read_csv('outputPLACES.csv')  # Contient Traveler ID, Days, Place ID
+df2 = pd.read_csv('outputXY.csv')      # Contient ID, Days, x(km), y(km)
 
-# Data for the second table (ID, Days, x(km), y(km))
-data2 = {
-    'ID': [0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4],
-    'Days': [80.64657756613256, 235.49366412282828, 318.70257158522935, 32.787134144236994, 
-             65.38867228100221, 143.4943506115183, 172.650798031163, 316.5803010141229, 
-             88.4001686918016, 126.85278109910891, 241.59006842198136, 265.6188326916466, 
-             3.4269545635538163, 81.64013075946859, 84.85122366539542, 111.47074929423299, 
-             161.62453442083424, 194.40947831749438],
-    'x(km)': [120.40947727299289, -7.152871216044041, -7.198081564440639, 120.39612883756261, 
-               120.42161243861985, -3.8142713257038405, -3.8142713257038405, -3.0545847161773283, 
-               -6.139939143137223, -6.139939143137223, -3.055855071073285, -3.0545847161773283, 
-               120.40947727299289, 119.9665970970414, 119.9665970970414, 120.39612883756261, 
-               -6.619047004981304, -6.619047004981304],
-    'y(km)': [-24.62243473021058, 3.8990338504739133, 3.9795668100279085, -24.600759175493245, 
-               -24.593522547546698, -3.6414753004862113, -3.6414753004862113, -3.318032579407415, 
-               7.100476584825499, 7.100476584825499, -3.3138880323439133, -3.318032579407415, 
-               -24.62243473021058, -24.87467846843526, -24.87467846843526, -24.600759175493245, 
-               3.9794645439371843, 3.9794645439371843]
-}
+print(f"[INFO] outputPLACES.csv chargé avec {df1.shape[0]} lignes et {df1.shape[1]} colonnes")
+print(f"[INFO] outputXY.csv chargé avec {df2.shape[0]} lignes et {df2.shape[1]} colonnes")
 
-df2 = pd.DataFrame(data2)
-
-# Merging the two datasets based on 'Traveler ID' and 'ID' to plot together
+# Fusionner les deux datasets basés sur 'Traveler ID' et 'ID'
+print("[INFO] Fusion des datasets...")
 merged_df = pd.merge(df1, df2, left_on='Traveler ID', right_on='ID')
 
+print(f"[INFO] Fusion effectuée : {merged_df.shape[0]} lignes résultantes")
+
+# Vérification rapide des premières lignes du dataset fusionné
+print("[INFO] Aperçu des premières lignes des données fusionnées :")
+print(merged_df.head())
+
 # Plotting
+print("[INFO] Génération du graphique...")
+
 plt.figure(figsize=(10, 6))
-sns.scatterplot(data=merged_df, x='x(km)', y='y(km)', hue='Traveler ID', palette='viridis', s=100)
+
+# Création de la barre de progression
+num_points = len(merged_df)
+progress_bar = tqdm(total=num_points, desc="[INFO] Progression du tracé", unit="points")
+
+# Tracé avec mise à jour de la barre de progression
+for i in range(num_points):
+    sns.scatterplot(x=[merged_df.loc[i, 'x(km)']], 
+                    y=[merged_df.loc[i, 'y(km)']], 
+                    hue=[merged_df.loc[i, 'Traveler ID']], 
+                    palette='viridis', 
+                    s=100)
+    progress_bar.update(1)
+    time.sleep(0.01)  # Simule un calcul (peut être supprimé)
+
+progress_bar.close()
+
 plt.title('Traveler Locations based on Days and Coordinates')
 plt.xlabel('X (km)')
 plt.ylabel('Y (km)')
 plt.legend(title='Traveler ID')
 plt.grid(True)
+
+print("[INFO] Affichage du graphique...")
 plt.show()
+print("[INFO] Script terminé avec succès.")

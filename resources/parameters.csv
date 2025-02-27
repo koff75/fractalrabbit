@@ -1,7 +1,7 @@
-num_users,110
-duration_years,5
-sampling_rate_seconds,7
-min_latitude,1
-max_latitude,40
-min_longitude,-19
-max_longitude,19
+space dimension, 2
+fractal dimension, 1.33
+number of points, 5
+number of travellers, 3
+number of co-travellers, 1
+number of days, 14.0
+number of reports, 2.0
